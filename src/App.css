@@ -1,0 +1,9 @@
+.app {
+    max-width: 960px;
+    margin: auto;
+}
+
+.header {
+    text-align: center;
+    line-height: 3;
+}
