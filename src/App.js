@@ -1,5 +1,5 @@
-import React from "react";
-import { Tabs } from "antd";
+import React from 'react';
+import { Tabs } from 'antd';
 import Push from './Push';
 import Pull from './Pull';
 
@@ -9,15 +9,15 @@ const { TabPane } = Tabs;
 
 function App() {
 	return (
-		<div className="app">
-			<h1 className="header">Sync</h1>
-			
-			<div className="main">
-				<Tabs defaultActiveKey="push">
-					<TabPane tab="push" key="push">
+		<div className='app'>
+			<h1 className='header'>Sync</h1>
+
+			<div className='main'>
+				<Tabs defaultActiveKey='push'>
+					<TabPane tab='push' key='push'>
 						<Push />
 					</TabPane>
-					<TabPane tab="pull" key="pull">
+					<TabPane tab='pull' key='pull'>
 						<Pull />
 					</TabPane>
 				</Tabs>

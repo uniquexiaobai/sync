@@ -1,44 +1,47 @@
-import React, { useState, useContext } from 'react';
-import { Input, Button, message } from 'antd';
+import React, { useState, useRef } from 'react';
+import { Input, Button, message as messageModal } from 'antd';
 import { useCopyClipboard } from '@lokibai/react-use-copy-clipboard';
-import { FirebaseContext } from './context';
+import { get as getMessageByCode } from './leancloud';
 
 const Pull = () => {
-    const firebase = useContext(FirebaseContext);
-    const [value, setValue] = useState('');
-    const [isCopied, setCopied] = useCopyClipboard();
+	const [code, setCode] = useState('');
+	const [isCopied, setCopied] = useCopyClipboard();
+	const lastCodeRef = useRef(null);
 
-    const handleChange = (e) => {
-        setValue(e.target.value);
-    };
+	const handleChange = (e) => {
+		setCode(e.target.value);
+	};
 
-    const handleSubmit = async () => {
-        if (isCopied) return;
-        
-        const doc = await firebase.firestore().collection('messages').doc(value).get();
+	const handleSubmit = async () => {
+		if (isCopied && lastCodeRef.current === code) return;
+		const message = await getMessageByCode(code);
 
-        if (doc.exists) {
-            const data = doc.data().message;
-            setCopied(doc.data().message);
-            message.success(`${data} is copied`);
-            console.log(value, data);
-        }
-    };
+		if (message) {
+			setCopied(message);
+			messageModal.success(`the message '${message}' is copied`);
+			console.log(code, message);
+		} else {
+			messageModal.error(`the code is illegal`);
+		}
+		lastCodeRef.current = code;
+	};
 
-    return (
-        <div>
-            <div>
-                <Input 
-                    placeholder="Please input your message key" 
-                    value={value}
-                    onChange={handleChange} 
-                />
-            </div>
-            <div style={{marginTop: '10px'}}>
-                <Button type="primary" onClick={handleSubmit}>Submit</Button>
-            </div>
-        </div>
-    );
+	return (
+		<div>
+			<div>
+				<Input
+					placeholder='Please input your message key'
+					value={code}
+					onChange={handleChange}
+				/>
+			</div>
+			<div style={{ marginTop: '10px' }}>
+				<Button type='primary' onClick={handleSubmit}>
+					Submit
+				</Button>
+			</div>
+		</div>
+	);
 };
 
 export default Pull;
