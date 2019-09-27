@@ -1,5 +1,13 @@
-import React, { useState } from 'react';
-import { Input, Button, message as messageModal } from 'antd';
+import React, { useState, useRef } from 'react';
+import {
+	Result,
+	Icon,
+	Row,
+	Col,
+	Input,
+	Button,
+	message as messageModal,
+} from 'antd';
 import { useCopyClipboard } from '@lokibai/react-use-copy-clipboard';
 import { set as saveMessage } from './leancloud';
 
@@ -17,41 +25,69 @@ const { TextArea } = Input;
 
 const Push = () => {
 	const [message, setMessage] = useState('');
+	const [loading, setLoading] = useState(false);
 	const [isCopied, setCopied] = useCopyClipboard();
+	const lastCodeRef = useRef(null);
 
 	const handleChange = (e) => {
 		setMessage(e.target.value);
 	};
 
 	const handleSubmit = async () => {
-		if (isCopied) return;
+		setLoading(true);
+
 		const code = createCode();
 		const isSaved = await saveMessage(code, message);
 
 		if (isSaved) {
+			lastCodeRef.current = code;
 			setCopied(code);
-			messageModal.success(
-				`use the code '${code}' to pull, the code is copied`,
-			);
-			console.log(code, message);
-		}
+            messageModal.success('Copied');
+		} else {
+            // 失败
+        }
+        setLoading(false);
 	};
 
-	return (
-		<div>
-			<div>
+	const handleCopy = () => {
+		setCopied(lastCodeRef.current);
+		messageModal.success('Copied');
+	};
+
+	return isCopied ? (
+		<Result
+			icon={<Icon type='smile' theme='twoTone' />}
+			title={lastCodeRef.current}
+			subTitle={message}
+			extra={
+				<Button type='primary' onClick={handleCopy}>
+					Copy
+				</Button>
+			}
+		/>
+	) : (
+		<Row>
+			<Col span={24}>
 				<TextArea
-					placeholder='Please input your message value'
+					autosize={{ minRows: 3 }}
+					size='large'
+					placeholder='Enter your message to push'
 					value={message}
 					onChange={handleChange}
 				/>
-			</div>
-			<div style={{ marginTop: '10px' }}>
-				<Button type='primary' onClick={handleSubmit}>
+			</Col>
+			<Col span={24} style={{ marginTop: '10px' }}>
+				<Button
+					block
+					size='large'
+					type='primary'
+					loading={loading}
+					onClick={handleSubmit}
+				>
 					Submit
 				</Button>
-			</div>
-		</div>
+			</Col>
+		</Row>
 	);
 };
 
