@@ -1,13 +1,5 @@
 import React, { useState, useRef } from 'react';
-import {
-	Row,
-	Col,
-	Result,
-	Icon,
-	Input,
-	Button,
-	message as messageModal,
-} from 'antd';
+import { Row, Col, Result, Input, Button, message as messageModal } from 'antd';
 import { useCopyClipboard } from '@lokibai/react-use-copy-clipboard';
 import { get as getMessageByCode } from './leancloud';
 
@@ -17,7 +9,7 @@ const Pull = () => {
 	const [isCopied, setCopied] = useCopyClipboard();
 	const lastCodeRef = useRef(null);
 
-	const handleChange = (e) => {
+	const handleChange = e => {
 		setCode(e.target.value);
 	};
 
@@ -43,7 +35,8 @@ const Pull = () => {
 
 	return isCopied ? (
 		<Result
-			icon={<Icon type='smile' theme='twoTone' />}
+			// icon={<Icon type='smile' theme='twoTone' />}
+			status='success'
 			title={lastCodeRef.current}
 			subTitle={code}
 			extra={

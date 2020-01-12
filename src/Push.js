@@ -1,13 +1,6 @@
 import React, { useState, useRef } from 'react';
-import {
-	Result,
-	Icon,
-	Row,
-	Col,
-	Input,
-	Button,
-	message as messageModal,
-} from 'antd';
+import { Result, Row, Col, Input, Button, message as messageModal } from 'antd';
+// import { SmileTwoTone } from '@ant-design/icons';
 import { useCopyClipboard } from '@lokibai/react-use-copy-clipboard';
 import { set as saveMessage } from './leancloud';
 
@@ -29,7 +22,7 @@ const Push = () => {
 	const [isCopied, setCopied] = useCopyClipboard();
 	const lastCodeRef = useRef(null);
 
-	const handleChange = (e) => {
+	const handleChange = e => {
 		setMessage(e.target.value);
 	};
 
@@ -42,11 +35,11 @@ const Push = () => {
 		if (isSaved) {
 			lastCodeRef.current = code;
 			setCopied(code);
-            messageModal.success('Copied');
+			messageModal.success('Copied');
 		} else {
-            // 失败
-        }
-        setLoading(false);
+			// 失败
+		}
+		setLoading(false);
 	};
 
 	const handleCopy = () => {
@@ -56,7 +49,8 @@ const Push = () => {
 
 	return isCopied ? (
 		<Result
-			icon={<Icon type='smile' theme='twoTone' />}
+			// icon={<SmileTwoTone />}
+			status='success'
 			title={lastCodeRef.current}
 			subTitle={message}
 			extra={
@@ -69,7 +63,7 @@ const Push = () => {
 		<Row>
 			<Col span={24}>
 				<TextArea
-					autosize={{ minRows: 3 }}
+					autoSize={{ minRows: 3 }}
 					size='large'
 					placeholder='Enter your message to push'
 					value={message}
